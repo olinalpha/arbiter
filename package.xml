@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>funrobo_robot</name>
+  <name>arbiter</name>
   <version>0.0.0</version>
   <description>The funrobo_robot package</description>
 

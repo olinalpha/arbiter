@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
-from std_msgs.msg import Int8MultiArray
+from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Twist
 import numpy as np
 
@@ -13,13 +13,13 @@ class Midbrain_Arbiter(object):
 		rospy.init_node('midbrain_arbiter')
 
 		self.vel_array = np.zeros([len(INPUTS), ARRAY_SIZE])
-		self.vel_array[:,5] = 1
+		self.vel_array[:,5] = 0
 		self.turn_array = np.zeros([len(INPUTS), ARRAY_SIZE])
-		self.turn_array[:,5] = 1
+		self.turn_array[:,5] = 0
 		self.initial_turn_array = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.051, 0.041, 0.031, 0.021, 0.011]
 
-		rospy.Subscriber('wpt/cmd_vel', Int8MultiArray, self.wpt_cmd_vel_cb)
-		rospy.Subscriber('obst/cmd_vel', Int8MultiArray, self.obst_cmd_vel_cb)
+		rospy.Subscriber('wpt/cmd_vel', Float32MultiArray, self.wpt_cmd_vel_cb)
+		rospy.Subscriber('obst/cmd_vel', Float32MultiArray, self.obst_cmd_vel_cb)
 
 		self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
@@ -48,8 +48,9 @@ class Midbrain_Arbiter(object):
 		vel = vel_sum_array.argmax()
 		turn = turn_sum_array.argmax()
 		msg = Twist()
-		msg.linear.x = 2*vel/(ARRAY_SIZE-1)-1
-		msg.angular.z = 2*turn/(ARRAY_SIZE-1)-1
+		msg.linear.x = 2.0*vel/(ARRAY_SIZE-1)-1
+		msg.angular.z = 2.0*turn/(ARRAY_SIZE-1)-1
+		print turn_sum_array
 		self.cmd_vel_pub.publish(msg)
 
 if __name__ == '__main__':
