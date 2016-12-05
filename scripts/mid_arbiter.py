@@ -16,7 +16,7 @@ class Midbrain_Arbiter(object):
 		self.vel_array[:,5] = 0
 		self.turn_array = np.zeros([len(INPUTS), ARRAY_SIZE])
 		self.turn_array[:,5] = 0
-		self.initial_turn_array = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.051, 0.041, 0.031, 0.021, 0.011]
+		self.initial_turn_array = [0.005, 0.006, 0.007, 0.008, 0.009, 0, 0.009, 0.008, 0.007, 0.006, 0.005]
 
 		rospy.Subscriber('wpt/cmd_vel', Float32MultiArray, self.wpt_cmd_vel_cb)
 		rospy.Subscriber('obst/cmd_vel', Float32MultiArray, self.obst_cmd_vel_cb)
