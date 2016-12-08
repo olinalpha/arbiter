@@ -6,7 +6,7 @@ from geometry_msgs.msg import Twist
 import numpy as np
 
 ARRAY_SIZE = 11
-INPUTS = ['wpt', 'obst']
+INPUTS = ['wpt', 'obst', 'wall']
 
 class Midbrain_Arbiter(object):
 	def __init__(self):
@@ -16,10 +16,11 @@ class Midbrain_Arbiter(object):
 		self.vel_array[:,5] = 0
 		self.turn_array = np.zeros([len(INPUTS), ARRAY_SIZE])
 		self.turn_array[:,5] = 0
-		self.initial_turn_array = [0.005, 0.006, 0.007, 0.008, 0.009, 0, 0.009, 0.008, 0.007, 0.006, 0.005]
+		self.initial_turn_array = [0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.009, 0.008, 0.007, 0.006, 0.005]
 
 		rospy.Subscriber('wpt/cmd_vel', Float32MultiArray, self.wpt_cmd_vel_cb)
 		rospy.Subscriber('obst/cmd_vel', Float32MultiArray, self.obst_cmd_vel_cb)
+		rospy.Subscriber('wall/cmd_vel', Float32MultiArray, self.wall_cmd_vel_cb)
 
 		self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
@@ -28,6 +29,9 @@ class Midbrain_Arbiter(object):
 
 	def obst_cmd_vel_cb(self, msg):
 		self.update_array(msg.data, INPUTS.index('obst'))
+
+	def wall_cmd_vel_cb(self, msg):
+		self.update_array(msg.data, INPUTS.index('wall'))
 
 	def update_array(self, data, row):
 		data = np.asarray(data).reshape([2, ARRAY_SIZE])
